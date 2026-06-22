@@ -1,4 +1,13 @@
 {
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "539G378X2X.com.collinboswell.scripturecompanion",
+        "paths": ["/confirm", "/confirm/*"]
+      }
+    ]
+  },
   "webcredentials": {
     "apps": ["539G378X2X.com.collinboswell.scripturecompanion"]
   }
