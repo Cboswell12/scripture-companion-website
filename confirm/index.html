@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm your email · Scripture Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#0e0b08; --gold:#b8966e; --cream:#ece6da; --muted:#978c7c; --border:#2e2519; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;}
+    body{ background:var(--bg); color:var(--cream); font-family:'Inter',system-ui,sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; text-align:center; }
+    .wrap{width:100%; max-width:420px;}
+    .mark{ font-family:'Cormorant Garamond',Georgia,serif; font-size:20px; color:var(--gold); letter-spacing:.5px; margin-bottom:40px; }
+    .icon{ width:72px; height:72px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:var(--gold); background:rgba(184,150,110,.08); border:1px solid rgba(184,150,110,.22); margin-bottom:22px; font-size:32px; }
+    h1{ font-family:'Cormorant Garamond',Georgia,serif; font-size:32px; font-weight:600; color:var(--cream); margin-bottom:6px; }
+    .sub-es{font-family:'Cormorant Garamond',Georgia,serif; font-size:17px; font-style:italic; color:var(--muted); margin-bottom:20px;}
+    p.lead{font-size:15px; line-height:1.55; color:var(--muted); margin-bottom:6px;}
+    p.lead-es{font-size:13px; line-height:1.55; font-style:italic; color:#7d7466; margin-bottom:28px;}
+    button{ font-family:'Inter',sans-serif; font-size:16px; font-weight:600; color:var(--bg); background:var(--gold); border:none; border-radius:12px; padding:15px 28px; width:100%; max-width:320px; cursor:pointer; transition:opacity .18s ease; }
+    button:hover{opacity:.92;}
+    button:disabled{opacity:.6; cursor:default;}
+    .hidden{display:none !important;}
+    .spinner{ width:22px; height:22px; border:2px solid rgba(184,150,110,.3); border-top-color:var(--gold); border-radius:50%; animation:spin .8s linear infinite; display:inline-block; }
+    @keyframes spin{to{transform:rotate(360deg);}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mark">&#10022; Scripture Companion</div>
+
+    <div id="state-ready">
+      <div class="icon">&#9993;</div>
+      <h1>Confirm your email</h1>
+      <div class="sub-es">Confirma tu correo</div>
+      <p class="lead">Tap the button below to confirm your email address.</p>
+      <p class="lead-es">Toca el bot&oacute;n para confirmar tu correo.</p>
+      <button id="btn-confirm">Confirm my email</button>
+    </div>
+
+    <div id="state-loading" class="hidden">
+      <div class="icon"><span class="spinner"></span></div>
+      <h1>Confirming&hellip;</h1>
+      <div class="sub-es">Confirmando&hellip;</div>
+    </div>
+
+    <div id="state-success" class="hidden">
+      <div class="icon">&#10003;</div>
+      <h1>You're all set</h1>
+      <div class="sub-es">&iexcl;Todo listo!</div>
+      <p class="lead">Your email is confirmed. Open the Scripture Companion app and sign in.</p>
+      <p class="lead-es">Tu correo est&aacute; confirmado. Abre la app Scripture Companion e inicia sesi&oacute;n.</p>
+    </div>
+
+    <div id="state-error" class="hidden">
+      <div class="icon">&#9888;</div>
+      <h1>Link expired</h1>
+      <div class="sub-es">Enlace vencido</div>
+      <p class="lead">This link has expired or was already used. Open the Scripture Companion app and request a new code.</p>
+      <p class="lead-es">Este enlace venci&oacute; o ya se us&oacute;. Abre la app y solicita un c&oacute;digo nuevo.</p>
+    </div>
+
+    <div id="state-invalid" class="hidden">
+      <div class="icon">&#9888;</div>
+      <h1>Something's missing</h1>
+      <div class="sub-es">Falta algo</div>
+      <p class="lead">This confirmation link looks incomplete. Open the Scripture Companion app and request a new code.</p>
+      <p class="lead-es">Este enlace parece incompleto. Abre la app y solicita un c&oacute;digo nuevo.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://sjtkyrvgwlfarzosfvuj.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqdGt5cnZnd2xmYXJ6b3NmdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDUxMjAsImV4cCI6MjA5NDk4MTEyMH0.bSkcIgFoil9c-U_pwKnGg--aoIj3d0QxCscSo6WhWl0";
+
+    const params = new URLSearchParams(window.location.search);
+    const token_hash = params.get("token_hash");
+    const type = params.get("type") || "email";
+
+    function show(id){
+      ["state-ready","state-loading","state-success","state-error","state-invalid"]
+        .forEach(function(s){ document.getElementById(s).classList.toggle("hidden", s !== id); });
+    }
+
+    show(token_hash ? "state-ready" : "state-invalid");
+
+    document.getElementById("btn-confirm").addEventListener("click", async function(){
+      show("state-loading");
+      try{
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let { error } = await sb.auth.verifyOtp({ token_hash: token_hash, type: type });
+        if (error) { ({ error } = await sb.auth.verifyOtp({ token_hash: token_hash, type: "signup" })); }
+        if (error) throw error;
+        try { await sb.auth.signOut(); } catch(_){}
+        show("state-success");
+      }catch(e){
+        show("state-error");
+      }
+    });
+  </script>
+</body>
+</html>
