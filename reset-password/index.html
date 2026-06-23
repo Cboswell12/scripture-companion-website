@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reset your password · Scripture Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#0e0b08; --gold:#b8966e; --cream:#ece6da; --muted:#978c7c; --border:#2e2519; --card:#171210; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;}
+    body{ background:var(--bg); color:var(--cream); font-family:'Inter',system-ui,sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; text-align:center; }
+    .wrap{width:100%; max-width:420px;}
+    .mark{ font-family:'Cormorant Garamond',Georgia,serif; font-size:20px; color:var(--gold); letter-spacing:.5px; margin-bottom:40px; }
+    .icon{ width:72px; height:72px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:var(--gold); background:rgba(184,150,110,.08); border:1px solid rgba(184,150,110,.22); margin-bottom:22px; font-size:30px; }
+    h1{ font-family:'Cormorant Garamond',Georgia,serif; font-size:32px; font-weight:600; color:var(--cream); margin-bottom:6px; }
+    .sub-es{font-family:'Cormorant Garamond',Georgia,serif; font-size:17px; font-style:italic; color:var(--muted); margin-bottom:20px;}
+    p.lead{font-size:15px; line-height:1.55; color:var(--muted); margin-bottom:6px;}
+    p.lead-es{font-size:13px; line-height:1.55; font-style:italic; color:#7d7466; margin-bottom:26px;}
+    .field{ text-align:left; margin-bottom:14px; }
+    label{ display:block; font-size:12px; color:var(--muted); margin-bottom:6px; letter-spacing:.3px; }
+    input{ width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; font-family:'Inter',sans-serif; font-size:16px; color:var(--cream); outline:none; transition:border-color .18s ease, box-shadow .18s ease; }
+    input:focus{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(184,150,110,.18); }
+    button{ font-family:'Inter',sans-serif; font-size:16px; font-weight:600; color:var(--bg); background:var(--gold); border:none; border-radius:12px; padding:15px 28px; width:100%; cursor:pointer; transition:opacity .18s ease; margin-top:6px; }
+    button:hover{opacity:.92;}
+    button:disabled{opacity:.6; cursor:default;}
+    .msg{ font-size:13px; line-height:1.5; color:#c98b6e; margin-top:14px; min-height:18px; }
+    .hidden{display:none !important;}
+    .spinner{ width:22px; height:22px; border:2px solid rgba(184,150,110,.3); border-top-color:var(--gold); border-radius:50%; animation:spin .8s linear infinite; display:inline-block; }
+    @keyframes spin{to{transform:rotate(360deg);}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="mark">&#10022; Scripture Companion</div>
+
+    <div id="state-form">
+      <div class="icon"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></div>
+      <h1>Set a new password</h1>
+      <div class="sub-es">Crea una nueva contrase&ntilde;a</div>
+      <p class="lead">Choose a new password for your account.</p>
+      <p class="lead-es">Elige una nueva contrase&ntilde;a para tu cuenta.</p>
+      <div class="field">
+        <label for="pw1">New password / Nueva contrase&ntilde;a</label>
+        <input id="pw1" type="password" autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label for="pw2">Confirm password / Confirmar contrase&ntilde;a</label>
+        <input id="pw2" type="password" autocomplete="new-password" />
+      </div>
+      <button id="btn-reset">Reset password</button>
+      <div id="msg" class="msg"></div>
+    </div>
+
+    <div id="state-loading" class="hidden">
+      <div class="icon"><span class="spinner"></span></div>
+      <h1>Updating&hellip;</h1>
+      <div class="sub-es">Actualizando&hellip;</div>
+    </div>
+
+    <div id="state-success" class="hidden">
+      <div class="icon">&#10003;</div>
+      <h1>Password updated</h1>
+      <div class="sub-es">Contrase&ntilde;a actualizada</div>
+      <p class="lead">Open the Scripture Companion app and sign in with your new password.</p>
+      <p class="lead-es">Abre la app Scripture Companion e inicia sesi&oacute;n con tu nueva contrase&ntilde;a.</p>
+    </div>
+
+    <div id="state-error" class="hidden">
+      <div class="icon">&#9888;</div>
+      <h1>Link expired</h1>
+      <div class="sub-es">Enlace vencido</div>
+      <p class="lead">This reset link has expired or was already used. Open the app, tap "Forgot password," and request a new one.</p>
+      <p class="lead-es">Este enlace venci&oacute; o ya se us&oacute;. Abre la app, toca "Olvid&eacute; mi contrase&ntilde;a" y solicita uno nuevo.</p>
+    </div>
+
+    <div id="state-invalid" class="hidden">
+      <div class="icon">&#9888;</div>
+      <h1>Something's missing</h1>
+      <div class="sub-es">Falta algo</div>
+      <p class="lead">This reset link looks incomplete. Open the app, tap "Forgot password," and request a new one.</p>
+      <p class="lead-es">Este enlace parece incompleto. Abre la app, toca "Olvid&eacute; mi contrase&ntilde;a" y solicita uno nuevo.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://sjtkyrvgwlfarzosfvuj.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqdGt5cnZnd2xmYXJ6b3NmdnVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MDUxMjAsImV4cCI6MjA5NDk4MTEyMH0.bSkcIgFoil9c-U_pwKnGg--aoIj3d0QxCscSo6WhWl0";
+
+    const params = new URLSearchParams(window.location.search);
+    const token_hash = params.get("token_hash");
+    const type = params.get("type") || "recovery";
+
+    function show(id){
+      ["state-form","state-loading","state-success","state-error","state-invalid"]
+        .forEach(function(s){ document.getElementById(s).classList.toggle("hidden", s !== id); });
+    }
+    function setMsg(t){ document.getElementById("msg").textContent = t || ""; }
+
+    show(token_hash ? "state-form" : "state-invalid");
+
+    document.getElementById("btn-reset").addEventListener("click", async function(){
+      const pw1 = document.getElementById("pw1").value;
+      const pw2 = document.getElementById("pw2").value;
+      setMsg("");
+      if (!pw1 || pw1.length < 6){ setMsg("Password must be at least 6 characters. / La contraseña debe tener al menos 6 caracteres."); return; }
+      if (pw1 !== pw2){ setMsg("Passwords don't match. / Las contraseñas no coinciden."); return; }
+      show("state-loading");
+      try{
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const { error: vErr } = await sb.auth.verifyOtp({ token_hash: token_hash, type: type });
+        if (vErr){ show("state-error"); return; }
+        const { error: uErr } = await sb.auth.updateUser({ password: pw1 });
+        if (uErr){
+          show("state-form");
+          setMsg((uErr.message || "Couldn't update password.") + " / No se pudo actualizar la contraseña.");
+          return;
+        }
+        try { await sb.auth.signOut(); } catch(_){}
+        show("state-success");
+      }catch(e){
+        show("state-error");
+      }
+    });
+  </script>
+</body>
+</html>
