@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>You’re invited — Scripture Companion</title>
+<meta name="robots" content="noindex"/>
+<meta name="description" content="You've been invited to walk together on Scripture Companion."/>
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--bg:#0e0b08;--ink:#1a1612;--gold:#b8966e;--gold-soft:rgba(184,150,110,.55);--parchment:#faf7f2;
+        --muted:rgba(250,247,242,.62);--faint:rgba(250,247,242,.42);--line:rgba(184,150,110,.18);
+        --serif:'Cormorant Garamond',Georgia,serif;--sans:'Inter',-apple-system,sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--parchment);font-family:var(--sans);font-weight:300;line-height:1.7;
+       -webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center;justify-content:center;
+       padding:32px 22px;text-align:center}
+  a{color:inherit;text-decoration:none}
+  .card{max-width:520px;width:100%}
+  .spark{color:var(--gold);font-size:40px;line-height:1;text-shadow:0 0 34px rgba(184,150,110,.5);display:block;margin-bottom:20px}
+  .brand{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--gold);letter-spacing:.02em;margin-bottom:34px}
+  h1{font-family:var(--serif);font-weight:500;font-size:clamp(30px,7vw,44px);line-height:1.15;margin-bottom:16px}
+  .lead{font-size:15.5px;color:var(--muted);max-width:420px;margin:0 auto 28px}
+  .code-box{background:var(--ink);border:1px solid var(--gold-soft);border-radius:16px;padding:22px 20px;margin:0 auto 26px;max-width:380px}
+  .code-label{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .code{font-family:var(--serif);font-size:34px;font-weight:600;letter-spacing:.14em;color:var(--parchment);word-break:break-all}
+  .copy-btn{margin-top:14px;background:none;border:1px solid var(--gold-soft);border-radius:999px;color:var(--gold);
+            font-family:var(--sans);font-size:13px;font-weight:500;padding:9px 22px;cursor:pointer;transition:all .15s ease}
+  .copy-btn:hover{background:rgba(184,150,110,.12)}
+  .store-badge{display:inline-flex;flex-direction:column;align-items:center;gap:2px;background:var(--ink);
+               border:1px solid var(--gold-soft);border-radius:14px;padding:13px 30px;margin-bottom:24px}
+  .store-badge .small{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .store-badge .big{font-family:var(--serif);font-size:21px;font-weight:600}
+  .manual{font-size:13.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:22px;max-width:420px;margin:0 auto}
+  .manual strong{color:var(--muted);font-weight:500}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="spark">✦</span>
+    <p class="brand">The Scripture Companion</p>
+    <h1>You’ve been invited to walk together on Scripture Companion ✦</h1>
+    <p class="lead">Open this link on your iPhone with the app installed and it will open right where you belong — or download the app to begin.</p>
+
+    <div class="code-box" id="codeBox" hidden>
+      <p class="code-label">Your invite code</p>
+      <p class="code" id="codeText"></p>
+      <button class="copy-btn" id="copyBtn">Copy code</button>
+    </div>
+
+    <!-- TODO at launch: replace href="#" with the real App Store URL:
+         https://apps.apple.com/app/id6772095961 -->
+    <a class="store-badge" href="#">
+      <span class="small">Download on the</span>
+      <span class="big">App Store</span>
+    </a>
+
+    <p class="manual">In the app: <strong>Journey → Community → Have a code? Redeem it ✦</strong></p>
+  </div>
+
+<script>
+(function(){
+  var code = decodeURIComponent(location.pathname.replace(/^\/invite\/?/, '')).replace(/\/+$/, '').trim();
+  if (!code) return; // no code in the URL — leave the code section hidden
+
+  var box = document.getElementById('codeBox');
+  var text = document.getElementById('codeText');
+  var btn = document.getElementById('copyBtn');
+  text.textContent = code;
+  box.hidden = false;
+
+  btn.addEventListener('click', function(){
+    function done(){ btn.textContent = 'Copied ✦'; setTimeout(function(){ btn.textContent = 'Copy code'; }, 2000); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done).catch(function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+
+  // If the app is installed, open it straight to the invite; harmless no-op otherwise.
+  location.href = 'scripturecompanion://invite/' + encodeURIComponent(code);
+})();
+</script>
+</body>
+</html>
