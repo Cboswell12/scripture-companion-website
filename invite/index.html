@@ -87,8 +87,13 @@
     }
   });
 
-  // If the app is installed, open it straight to the invite; harmless no-op otherwise.
-  location.href = 'scripturecompanion://invite/' + encodeURIComponent(code);
+  // If the app is installed, open it straight to the invite — iOS only;
+  // on desktop the custom scheme throws an "address is invalid" dialog.
+  var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS) {
+    location.href = 'scripturecompanion://invite/' + encodeURIComponent(code);
+  }
 })();
 </script>
 </body>
